@@ -1,44 +1,45 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import Levels from './components/Levels';
-import Facilities from './components/Facilities';
-import NewsAndEvents from './components/NewsAndEvents';
-import Admissions from './components/Admissions';
-import FAQ from './components/FAQ';
-import Contact from './components/Contact';
 import Footer from './components/Footer';
+import LandingPage from './pages/LandingPage';
+import TeachersPage from './pages/TeachersPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
 export default function App() {
-  const [selectedLevel, setSelectedLevel] = useState('');
-
-  const handleSelectLevelForAdmission = (levelName) => {
-    setSelectedLevel(levelName);
-    const element = document.getElementById('inscripciones');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <div className="app-wrapper">
-      <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Levels onSelectLevelForAdmission={handleSelectLevelForAdmission} />
-        <Facilities />
-        <NewsAndEvents />
-        <Admissions 
-          selectedLevel={selectedLevel} 
-          onClearSelectedLevel={() => setSelectedLevel('')} 
-        />
-        <FAQ />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <div className="app-wrapper">
+          <Navbar />
+          <Routes>
+            {/* Public Landing Page */}
+            <Route path="/" element={<LandingPage />} />
+
+            {/* Public Auth Pages */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/registro" element={<RegisterPage />} />
+
+            {/* Private Protected Route: Teachers Page */}
+            <Route
+              path="/profesores"
+              element={
+                <ProtectedRoute>
+                  <TeachersPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Fallback to Home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+          <Footer />
+        </div>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

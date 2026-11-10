@@ -1,9 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, GraduationCap, Phone, Mail, Clock, ChevronRight } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import {
+  Menu,
+  X,
+  GraduationCap,
+  Phone,
+  Mail,
+  Clock,
+  ChevronRight,
+  Lock,
+  User,
+  LogOut,
+  ShieldCheck,
+  UserPlus,
+  LogIn
+} from 'lucide-react';
 
-export default function Navbar({ onOpenContact }) {
+export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,19 +34,30 @@ export default function Navbar({ onOpenContact }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleNavClick = (anchorId) => {
+    setMobileMenuOpen(false);
+    if (!isHomePage) {
+      navigate(`/#${anchorId}`);
+    } else {
+      const element = document.getElementById(anchorId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   const navLinks = [
-    { label: 'Inicio', href: '#inicio' },
-    { label: 'Institucional', href: '#institucional' },
-    { label: 'Niveles', href: '#niveles' },
-    { label: 'Instalaciones', href: '#instalaciones' },
-    { label: 'Agenda', href: '#agenda' },
-    { label: 'Preguntas', href: '#faq' },
-    { label: 'Contacto', href: '#contacto' }
+    { label: 'Inicio', anchor: 'inicio' },
+    { label: 'Institucional', anchor: 'institucional' },
+    { label: 'Niveles', anchor: 'niveles' },
+    { label: 'Instalaciones', anchor: 'instalaciones' },
+    { label: 'Agenda', anchor: 'agenda' },
+    { label: 'Contacto', anchor: 'contacto' }
   ];
 
   return (
     <>
-      {/* Top micro bar for quick institutional contacts */}
+      {/* Top micro bar */}
       <div className="top-bar">
         <div className="container top-bar-content">
           <div className="top-bar-left">
@@ -40,10 +72,10 @@ export default function Navbar({ onOpenContact }) {
         </div>
       </div>
 
-      {/* Main sticky navigation */}
+      {/* Main Navigation */}
       <header className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="container navbar-container">
-          <a href="#inicio" className="brand-logo" onClick={() => setMobileMenuOpen(false)}>
+          <Link to="/" className="brand-logo" onClick={() => setMobileMenuOpen(false)}>
             <div className="logo-shield">
               <GraduationCap size={28} strokeWidth={2.2} />
             </div>
@@ -51,21 +83,60 @@ export default function Navbar({ onOpenContact }) {
               <span className="brand-name">Colegio Normal</span>
               <span className="brand-sub">Nacional Superior</span>
             </div>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="desktop-nav">
             {navLinks.map((link) => (
-              <a key={link.href} href={link.href} className="nav-link">
+              <button
+                key={link.anchor}
+                type="button"
+                onClick={() => handleNavClick(link.anchor)}
+                className="nav-link"
+              >
                 {link.label}
-              </a>
+              </button>
             ))}
+
+            {/* Special link to Teachers Private page */}
+            <Link
+              to="/profesores"
+              className={`nav-link nav-link-teachers ${location.pathname === '/profesores' ? 'active-route' : ''}`}
+            >
+              <span>Profesores</span>
+              {isAuthenticated ? (
+                <span className="nav-tag-badge unlocked">Acceso Habilitado</span>
+              ) : (
+                <span className="nav-tag-badge locked"><Lock size={12} /> Privado</span>
+              )}
+            </Link>
           </nav>
 
+          {/* Auth & CTAs */}
           <div className="nav-actions">
-            <a href="#inscripciones" className="btn btn-primary nav-cta">
-              Inscripciones 2026
-            </a>
+            {isAuthenticated ? (
+              <div className="user-profile-menu">
+                <Link to="/profesores" className="user-profile-btn" title="Ir a Profesores">
+                  <User size={16} />
+                  <span className="user-profile-name">{user?.name}</span>
+                </Link>
+                <button onClick={logout} className="btn-logout-nav" title="Cerrar Sesión">
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <div className="auth-quick-actions">
+                <Link to="/login" className="btn-login-ghost">
+                  <LogIn size={15} />
+                  <span>Ingresar</span>
+                </Link>
+                <Link to="/registro" className="btn btn-primary btn-register-nav">
+                  <UserPlus size={15} />
+                  <span>Registrarse</span>
+                </Link>
+              </div>
+            )}
+
             <button
               className="mobile-toggle"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -81,25 +152,73 @@ export default function Navbar({ onOpenContact }) {
           <div className="mobile-menu">
             <div className="container mobile-menu-inner">
               {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
+                <button
+                  key={link.anchor}
+                  type="button"
                   className="mobile-link"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => handleNavClick(link.anchor)}
                 >
                   <span>{link.label}</span>
                   <ChevronRight size={18} />
-                </a>
+                </button>
               ))}
-              <div className="mobile-cta-box">
-                <a
-                  href="#inscripciones"
-                  className="btn btn-primary"
-                  style={{ width: '100%' }}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Inscripciones y Vacantes 2026
-                </a>
+
+              <Link
+                to="/profesores"
+                className="mobile-link mobile-link-teachers"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <GraduationCap size={18} />
+                  <span>Nómina de Profesores (Privado)</span>
+                </div>
+                {isAuthenticated ? (
+                  <span className="nav-tag-badge unlocked">Habilitado</span>
+                ) : (
+                  <span className="nav-tag-badge locked"><Lock size={12} /> Privado</span>
+                )}
+              </Link>
+
+              <div className="mobile-auth-box">
+                {isAuthenticated ? (
+                  <div className="mobile-user-card">
+                    <div className="mobile-user-info">
+                      <User size={20} />
+                      <div>
+                        <strong>{user?.name}</strong>
+                        <small>{user?.role}</small>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="btn-logout-mobile"
+                    >
+                      <LogOut size={16} /> Cerrar Sesión
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mobile-auth-buttons">
+                    <Link
+                      to="/login"
+                      className="btn btn-outline-dark"
+                      style={{ width: '100%', justifyContent: 'center' }}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <LogIn size={16} /> Iniciar Sesión
+                    </Link>
+                    <Link
+                      to="/registro"
+                      className="btn btn-primary"
+                      style={{ width: '100%', justifyContent: 'center' }}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <UserPlus size={16} /> Crear Cuenta
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -108,4 +227,3 @@ export default function Navbar({ onOpenContact }) {
     </>
   );
 }
-

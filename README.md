@@ -1,71 +1,65 @@
-# Colegio Normal Nacional Superior - Landing Page
+# Colegio Normal Nacional Superior - Web & Portal Privado
 
-Landing page institucional desarrollada en **React** y **JavaScript**, construida con **Vite** y estilizada con CSS moderno y componentes modulares.
+Aplicación web institucional desarrollada con **React 19**, **JavaScript**, **React Router v7** y **Vite**.
 
-## 🏛️ Características Principales
-
-- **Diseño Institucional y Moderno:** Paleta de colores oficial (azul marino institucional, acentos dorados y fondo limpio), tipografía académica legible y diseño 100% responsivo para móviles, tablets y computadoras de escritorio.
-- **Barra Superior & Navegación:** Contactos rápidos, horarios, menú interactivo con scroll suave y menú desplegable para móviles.
-- **Sección Hero:** Presentación institucional con escudo, lema de la institución, botones de llamado a la acción y panel de estadísticas destacadas (+125 años de historia, 4 niveles educativos, +2.400 alumnos y +95% inserción universitaria/docente).
-- **Identidad & Historia:** Reseña histórica de la tradición normalista, monumento histórico y los 4 pilares formativos (Excelencia Pedagógica, Inclusión Pública, Ciencia y Arte, Formación Ciudadana).
-- **Niveles Educativos Articulados (Pestañas Interactivas):**
-  - **Nivel Inicial:** Jardín de Infantes (Salas de 3, 4 y 5 años).
-  - **Nivel Primario:** Escuela Primaria Graduada (1° a 7° Grado).
-  - **Nivel Secundario:** Bachillerato con orientaciones en Ciencias Sociales, Ciencias Naturales y Economía.
-  - **Nivel Superior:** Instituto de Formación Docente y Técnica (Profesorados y Tecnicaturas).
-  - *Interacción directa:* Al hacer clic en "Solicitar Vacante" en cualquier nivel, el formulario de inscripción se pre-selecciona automáticamente con dicho nivel.
-- **Campus e Instalaciones:** Biblioteca Histórica "Sarmiento", Laboratorios Científicos, Aulas Maker & Robótica, Complejo Deportivo, Aula Magna y Gabinete Psicopedagógico con filtros por categorías.
-- **Agenda Escolar & Recursos Descargables:** Próximos eventos (Expo Ciencias, Charlas informativas, Actos) y botones simulados de descarga de reglamentos y calendarios.
-- **Proceso de Inscripción 2026 & Formulario Funcional:**
-  - Guía visual en 4 pasos (Preinscripción, Documentación, Entrevista, Matriculación).
-  - Formulario interactivo con validación de campos, selección de nivel y generación de código oficial de seguimiento (ej. `CNNS-2026-XXXX`).
-- **Preguntas Frecuentes (FAQ):** Acordeón interactivo para resolver dudas sobre títulos, gratuidad, orientaciones y deportes.
-- **Contacto & Ubicación:** Información detallada de sedes, líneas de transporte público, correos directos por secretaría y formulario de consulta rápida.
-- **Pie de Página (Footer):** Enlaces rápidos, datos oficiales y botón para volver arriba con suavidad.
+Incluye tanto la **Landing Page pública** como un **Portal Privado de Profesores** protegido por autenticación con formularios de **Login** y **Registro**.
 
 ---
 
-## 🚀 Cómo Ejecutar el Proyecto
+## 🏛️ Estructura de Páginas y Navegación
 
-### 1. Iniciar el servidor de desarrollo
+### 1. Landing Page Pública (`/`)
+- **Header & Navbar:** Menú de navegación interactivo con scroll suave y estado dinámico de autenticación.
+- **Hero Institucional:** Estadísticas de la institución (+125 años, 4 niveles educativos, +2.400 alumnos).
+- **Identidad & Historia:** Pilares pedagógicos y monumento histórico.
+- **Niveles Educativos:** Selector de Nivel Inicial, Primario, Secundario y Superior con vinculación directa al formulario de vacantes.
+- **Instalaciones:** Biblioteca "Sarmiento", Laboratorios, Aulas Maker y Polideportivo con filtros por área.
+- **Agenda & Avisos:** Calendario de eventos y descargas simuladas de normativas.
+- **Inscripciones 2026:** Pasos de admisión y formulario interactivo con código de seguimiento (`CNNS-2026-XXXX`).
+- **Preguntas Frecuentes (FAQ):** Acordeón interactivo.
+- **Contacto:** Mapa, medios de transporte público y teléfonos.
+
+### 2. Portal Privado de Profesores (`/profesores` - 🔒 Ruta Protegida)
+- **Acceso Restringido:** Solo pueden acceder usuarios autenticados. Si un usuario no registrado o sin sesión intenta ingresar, es redirigido automáticamente a `/login` con aviso de ruta privada.
+- **Texto breve explicativo:** Presentación oficial del claustro docente y canales de consulta.
+- **Cuerpo Docente:** 10 profesores con cátedras, títulos de grado, niveles formativos, horarios de tutoría y biografía pedagógica.
+- **Buscador & Filtros:** Búsqueda en tiempo real por nombre, materia o especialidad, y filtros por departamento (Ciencias Sociales, Exactas, Lengua, Formación Docente, etc.).
+- **Interacción:** Modal funcional para enviar consultas pedagógicas y pedidos de tutoría directamente a cada profesor.
+
+### 3. Formulario de Inicio de Sesión (`/login`)
+- Acceso con email y contraseña.
+- Mensajes de error claros.
+- **Botón de credenciales de prueba** (1-clic para autocompletar con cuenta docente de demostración).
+- Redirección automática a la página que el usuario intentaba visitar.
+
+### 4. Formulario de Registro (`/registro`)
+- Registro de nuevos usuarios con Nombre, Email, Rol institucional (*Estudiante, Docente, Personal, Familiar*) y Contraseña.
+- Validación de contraseña (mínimo 6 caracteres y confirmación coincidente).
+- Persistencia en `localStorage` (los usuarios registrados se mantienen en el navegador).
+- Inicio de sesión automático tras el registro con redirección a `/profesores`.
+
+---
+
+## 🔑 Credenciales de Prueba Rápida
+
+| Campo | Valor |
+|---|---|
+| **Correo** | `docente@cnns.edu.ar` |
+| **Contraseña** | `password123` |
+
+*(También puedes crear cualquier cuenta nueva desde el formulario de `/registro`)*
+
+---
+
+## 🚀 Cómo Iniciar el Proyecto
+
+### Iniciar el servidor de desarrollo
 ```bash
 npm run dev
 ```
-Abre en tu navegador la URL que muestra Vite (usualmente `http://localhost:5173`).
+Abre en tu navegador la URL que muestra Vite (por ejemplo: `http://localhost:5173`).
 
-### 2. Generar versión para producción
+### Compilar para producción
 ```bash
 npm run build
-```
-
-### 3. Previsualizar la versión compilada
-```bash
-npm run preview
-```
-
----
-
-## 📁 Estructura del Código
-
-```text
-├── index.html                   # Plantilla HTML con fuentes de Google Fonts
-├── package.json                 # Dependencias (React 19, Lucide React, Vite)
-├── src/
-│   ├── main.jsx                 # Punto de entrada de la aplicación
-│   ├── App.jsx                  # Componente principal que orquesta las secciones
-│   ├── App.css                  # Estilos detallados y responsivos de las secciones
-│   ├── index.css                # Variables de diseño (Design Tokens) y reset
-│   ├── data/
-│   │   └── schoolData.js        # Información centralizada y estructurada del colegio
-│   └── components/
-│       ├── Navbar.jsx           # Navegación con menú responsive y scroll
-│       ├── Hero.jsx             # Portada de bienvenida y estadísticas
-│       ├── About.jsx            # Historia, misión y pilares formativos
-│       ├── Levels.jsx           # Selector interactivo de niveles educativos
-│       ├── Facilities.jsx       # Instalaciones y filtros por categorías
-│       ├── NewsAndEvents.jsx    # Calendario escolar y avisos
-│       ├── Admissions.jsx       # Pasos de admisión y formulario interactivo
-│       ├── FAQ.jsx              # Acordeón de preguntas frecuentes
-│       ├── Contact.jsx          # Ubicación, medios de transporte y contactos
-│       └── Footer.jsx           # Pie de página institucional
 ```
